@@ -118,38 +118,34 @@ unpaired  diff -0.00369   visibility 0.00438   -> indistinguishable from zero
 
 ---
 
-## Prior work, and what this is not
+## Prior work
 
 Common random numbers are a textbook variance-reduction technique from
-discrete-event simulation, decades older than this repository. Nothing in the
-method here is new, and the literature on it is both current and stronger than
-the empirical finding above.
+discrete-event simulation, and the recent literature on them is worth reading
+before trusting any measurement, including one made with this package.
 
 **Using Common Random Numbers for Simulation-based Planning with Rollouts**
-(Reinforcement Learning Journal, 2026) proves what `examples/04` only measures:
-CRN does not always reduce variance. It gives a counterexample and proposes a
-depth-dependent estimator with an actual variance guarantee. If you need the
-result rather than the demonstration, read that paper, not this code.
+(Reinforcement Learning Journal, 2026) proves what `examples/04` only
+demonstrates empirically: CRN does not always reduce variance. It gives a
+counterexample and a depth-dependent estimator with an actual variance
+guarantee.
 
 **When Does Pairing Seeds Reduce Variance? Evidence from a Multi-Agent Economic
-Simulation** (arXiv 2512.24145) asks the exact question `examples/04` answers,
-in a multi-agent setting, and ties the gain to seed-level correlation between
-the arms. Same conclusion, arrived at independently and reported first.
+Simulation** (arXiv 2512.24145) asks the same question in a multi-agent setting
+and ties the gain to seed-level correlation between the two arms.
 
 **Empirical Design in Reinforcement Learning** (JMLR 25, 2024) and **Deep
 Reinforcement Learning at the Edge of the Statistical Precipice** (NeurIPS 2021)
-are the standard references for how to report an RL result at all — sample
-sizes, interval estimates, and what a handful of seeds can and cannot support.
-Read those before deciding what to claim from any measurement, including one
-made with this package.
+are the standard references for sample sizes, interval estimates, and what a
+handful of seeds can and cannot support.
 
-So this repository is not a methodological contribution and should not be cited
-as one. It is a small, dependency-light, fully deterministic implementation with
-a worked demonstration of two things that are easy to say and harder to show:
-that a ranking can depend on how long you measured, and that pairing stops
-paying once the two arms stop resembling each other. The tests are the point —
-including the two that are deliberately aimed at claims this repository got
-wrong, below.
+What this package adds is not a new estimator. It is a dependency-light,
+bit-exact implementation that runs a full comparison in under two seconds, and
+a minimal reproducible case of a failure mode that is easy to assert and hard
+to show: a ranking that reverses with the measurement window, in an environment
+small enough to read in one sitting. `examples/03` isolates the mechanism
+behind that reversal by measurement rather than by argument, and the tests hold
+every claim in this README to something executable.
 
 ---
 
@@ -228,11 +224,28 @@ from every step.
 
 ## Background
 
-The harness generalises the measurement chain from my doctoral work on
-energy-aware UAV swarm surveillance (Faculty of Electronic Engineering,
-University of Niš), where meta-learned and ablated policies had to be compared
-under a fixed compute budget and differences were small enough that the
-measurement method decided the conclusion. The environment here is a
-stand-alone miniature; none of the thesis results depend on it.
+This package is the measurement chain from my doctoral research at the Faculty
+of Electronic Engineering, University of Nis, extracted and made reproducible.
+That work formulates persistent multi-UAV surveillance as a decentralized
+POMDP and asks whether meta-learning helps a swarm hold area coverage when its
+energy runs down.
+
+The reason the measurement mattered more than the method: the headline numbers
+were large (2.2x to 11.6x better end-of-episode reward than hand-coded
+baselines, across three seeds and 2.14 billion interaction steps), but the
+interesting results were the negative ones. A control arm trained at an
+identical compute budget failed in both repetitions, which is what makes the
+main result attributable to the method rather than to the compute. One of my
+own hypotheses was refuted and published as refuted. An error found later in
+my own energy model sent five checkpoints back through the pipeline and the
+smaller number is the one that stands.
+
+The evaluation set is disjoint from training on three axes simultaneously,
+including battery state of health at 60-78 percent, which the policy never saw
+during training. Two 2026 papers name heterogeneous fleets, where units differ
+in energy capacity, as open future work in their own limitations sections.
+
+None of that research depends on the environment in this repository, which is a
+stand-alone miniature built to demonstrate the tooling.
 
 MIT licensed.
