@@ -1,0 +1,44 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "paired-rl-eval"
+version = "0.1.0"
+description = "Paired measurement for multi-agent RL: common random numbers, bit-exact rewind, and a visibility threshold beside every difference."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "Jovica Petković" }]
+keywords = [
+    "reinforcement-learning",
+    "multi-agent",
+    "evaluation",
+    "common-random-numbers",
+    "variance-reduction",
+    "reproducibility",
+    "uav",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = ["numpy>=1.24"]
+
+[project.optional-dependencies]
+figures = ["matplotlib>=3.7"]
+dev = ["pytest>=7.4", "matplotlib>=3.7"]
+
+[project.urls]
+Homepage = "https://github.com/nisel84/paired-rl-eval"
+Issues = "https://github.com/nisel84/paired-rl-eval/issues"
+
+[tool.setuptools]
+packages = ["pairedeval"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
